@@ -150,10 +150,20 @@ textarea {
 
 .hero-panel {
   padding: 1.4rem;
-  display: grid;
-  gap: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 100%;
   overflow: hidden;
   position: relative;
+}
+
+.hero-actions {
+  width: 100%;
+}
+
+.hero-actions > * {
+  flex: 1 1 0;
 }
 
 .hero-panel::after {
@@ -525,8 +535,16 @@ textarea {
   }
 
   .hero-panel {
-    grid-template-columns: 1.3fr auto;
-    align-items: end;
+    width: fit-content;
+    align-items: center;
+  }
+
+  .hero-actions {
+    width: auto;
+  }
+
+  .hero-actions > * {
+    flex: 0 0 auto;
   }
 
   .stats-grid {

@@ -18,13 +18,6 @@ export default function DashboardPage() {
   return (
     <section className="page-stack">
       <section className="hero-panel">
-        <div>
-          <p className="section-kicker">Byggd för hemikonen på iPhone</p>
-          <h2>Logga styrkepass utan brus</h2>
-          <p>
-            Järnkoll fokuserar på set, vikt, progression och historik. Allt sparas lokalt i din egen SQLite-databas.
-          </p>
-        </div>
         <div className="hero-actions">
           <Link className="primary-button" to="/logga">
             Logga pass
