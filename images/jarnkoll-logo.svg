@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Jarnkoll">
+  <defs>
+    <linearGradient id="bg" x1="10%" x2="90%" y1="10%" y2="90%">
+      <stop offset="0%" stop-color="#162233" />
+      <stop offset="100%" stop-color="#090f16" />
+    </linearGradient>
+    <linearGradient id="bar" x1="0%" x2="100%" y1="0%" y2="0%">
+      <stop offset="0%" stop-color="#fb923c" />
+      <stop offset="100%" stop-color="#f43f5e" />
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="56" fill="url(#bg)" />
+  <circle cx="128" cy="128" r="86" fill="none" stroke="#243247" stroke-width="10" />
+  <rect x="44" y="118" width="168" height="20" rx="10" fill="url(#bar)" />
+  <rect x="24" y="96" width="20" height="64" rx="10" fill="#f8fafc" />
+  <rect x="212" y="96" width="20" height="64" rx="10" fill="#f8fafc" />
+  <rect x="64" y="82" width="16" height="92" rx="8" fill="#cbd5e1" />
+  <rect x="176" y="82" width="16" height="92" rx="8" fill="#cbd5e1" />
+  <path d="M118 60h20v86c0 19-16 34-35 34h-8v-19h8c9 0 15-6 15-15V60z" fill="#f8fafc" />
+</svg>
