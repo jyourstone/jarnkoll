@@ -10,8 +10,18 @@ export default function LogDetailPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    const id = Number(logId);
+    if (!Number.isInteger(id) || id <= 0) {
+      setLog(null);
+      setError('Ogiltigt logg-id.');
+      return;
+    }
+
+    setLog(null);
+    setError('');
+
     api
-      .getLog(Number(logId))
+      .getLog(id)
       .then(setLog)
       .catch((reason: Error) => setError(reason.message));
   }, [logId]);

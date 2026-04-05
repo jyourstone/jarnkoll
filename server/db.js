@@ -73,7 +73,10 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_logs_performed_on ON workout_logs(performed_on);
   CREATE INDEX IF NOT EXISTS idx_logs_template_id ON workout_logs(template_id);
   CREATE INDEX IF NOT EXISTS idx_log_exercises_exercise_id ON workout_log_exercises(exercise_id);
+  CREATE INDEX IF NOT EXISTS idx_log_exercises_log_id ON workout_log_exercises(log_id);
+  CREATE INDEX IF NOT EXISTS idx_workout_sets_log_exercise_id ON workout_sets(log_exercise_id);
   CREATE INDEX IF NOT EXISTS idx_template_exercises_template_id ON template_exercises(template_id);
+  CREATE INDEX IF NOT EXISTS idx_template_exercises_exercise_id ON template_exercises(exercise_id);
 `);
 
 function normalizeText(value) {
@@ -325,7 +328,13 @@ const saveTemplateTransaction = db.transaction((id, payload, isUpdate) => {
 
   let templateId = id;
   if (isUpdate) {
-    db.prepare('UPDATE workout_templates SET name = ?, notes = ?, updated_at = datetime(\'now\') WHERE id = ?').run(trimmedName, notes, id);
+    const updateResult = db
+      .prepare('UPDATE workout_templates SET name = ?, notes = ?, updated_at = datetime(\'now\') WHERE id = ?')
+      .run(trimmedName, notes, id);
+    if (updateResult.changes === 0) {
+      throw new Error('Traningspasset hittades inte.');
+    }
+
     db.prepare('DELETE FROM template_exercises WHERE template_id = ?').run(id);
   } else {
     const result = db
@@ -481,8 +490,8 @@ export function getLatestTemplateLog(templateId, beforeDate) {
 }
 
 export function buildComparisonMaps(log) {
-  const byExerciseId = {};
-  const byExerciseName = {};
+  const byExerciseId = Object.create(null);
+  const byExerciseName = Object.create(null);
 
   if (!log) {
     return { byExerciseId, byExerciseName };

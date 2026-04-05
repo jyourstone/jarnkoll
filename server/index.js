@@ -44,6 +44,10 @@ if (hasBuild) {
       return next();
     }
 
+    if (!request.accepts('html') || path.extname(request.path)) {
+      return next();
+    }
+
     response.sendFile(path.join(distDir, 'index.html'));
   });
 } else {

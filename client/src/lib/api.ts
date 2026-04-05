@@ -10,11 +10,11 @@ import type {
 
 async function request<T>(input: string, init?: RequestInit): Promise<T> {
   const response = await fetch(input, {
+    ...init,
     headers: {
       'Content-Type': 'application/json',
       ...(init?.headers || {}),
     },
-    ...init,
   });
 
   if (!response.ok) {
@@ -49,8 +49,15 @@ export const api = {
       method: 'PUT',
       body: JSON.stringify(payload),
     }),
-  getTemplateLogContext: (templateId: number, date?: string) =>
-    request<TemplateLogContext>(`/api/templates/${templateId}/log-context${date ? `?date=${date}` : ''}`),
+  getTemplateLogContext: (templateId: number, date?: string) => {
+    const params = new URLSearchParams();
+    if (date) {
+      params.set('date', date);
+    }
+
+    const query = params.toString();
+    return request<TemplateLogContext>(`/api/templates/${templateId}/log-context${query ? `?${query}` : ''}`);
+  },
   listLogs: (limit = 50) => request<WorkoutLogSummary[]>(`/api/logs?limit=${limit}`),
   getLog: (logId: number) => request<WorkoutLog>(`/api/logs/${logId}`),
   createLog: (payload: unknown) =>

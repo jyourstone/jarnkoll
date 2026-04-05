@@ -23,6 +23,8 @@ const templateSchema = z.object({
   exercises: z.array(templateExerciseSchema).min(1, 'Lagg till minst en ovning.').max(24),
 });
 
+const isoDatePattern = /^\d{4}-\d{2}-\d{2}$/;
+
 function parseId(value) {
   const id = Number(value);
   return Number.isInteger(id) && id > 0 ? id : null;
@@ -49,7 +51,12 @@ router.get('/:id/log-context', (request, response) => {
     return response.status(400).json({ message: 'Ogiltigt pass-id.' });
   }
 
-  const context = getTemplateLogContext(id, request.query.date?.toString());
+  const date = request.query.date?.toString();
+  if (date && !isoDatePattern.test(date)) {
+    return response.status(400).json({ message: 'Datum maste anges som YYYY-MM-DD.' });
+  }
+
+  const context = getTemplateLogContext(id, date);
   if (!context) {
     return response.status(404).json({ message: 'Traningspasset hittades inte.' });
   }

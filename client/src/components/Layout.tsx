@@ -30,6 +30,7 @@ export default function Layout() {
           <NavLink
             key={item.to}
             to={item.to}
+            end={item.to === '/'}
             className={({ isActive }) => `bottom-nav-link${isActive ? ' is-active' : ''}`}
           >
             {item.label}

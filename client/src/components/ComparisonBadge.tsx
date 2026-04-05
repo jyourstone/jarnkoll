@@ -12,19 +12,26 @@ export default function ComparisonBadge({ previous, currentEstimatedOneRepMax }:
   }
 
   const hasCurrentValue = currentEstimatedOneRepMax > 0;
+  const hasPreviousBaseline = previous.bestEstimatedOneRepMax > 0;
   const delta =
-    previous.bestEstimatedOneRepMax > 0 && hasCurrentValue
-      ? (currentEstimatedOneRepMax - previous.bestEstimatedOneRepMax) / previous.bestEstimatedOneRepMax
-      : 0;
+    hasPreviousBaseline && hasCurrentValue ? (currentEstimatedOneRepMax - previous.bestEstimatedOneRepMax) / previous.bestEstimatedOneRepMax : 0;
 
-  const stateClass = !hasCurrentValue ? 'is-neutral' : delta > 0 ? 'is-up' : delta < 0 ? 'is-down' : 'is-neutral';
+  const stateClass = !hasCurrentValue || !hasPreviousBaseline ? 'is-neutral' : delta > 0 ? 'is-up' : delta < 0 ? 'is-down' : 'is-neutral';
 
   return (
     <div className={`comparison-badge ${stateClass}`}>
       <p className="comparison-copy">
-        Senast {formatDate(previous.performedOn)}: {previous.bestSetLabel || formatWeight(previous.maxWeight)}
+        {hasPreviousBaseline
+          ? `Senast ${formatDate(previous.performedOn)}: ${previous.bestSetLabel || formatWeight(previous.maxWeight)}`
+          : `Senast ${formatDate(previous.performedOn)}: ingen tidigare matbar 1RM`}
       </p>
-      <strong>{hasCurrentValue ? formatPercent(delta) : 'Börja mäta för att se skillnad'}</strong>
+      <strong>
+        {!hasCurrentValue
+          ? 'Börja mäta för att se skillnad'
+          : hasPreviousBaseline
+            ? formatPercent(delta)
+            : 'Sätt en första baslinje'}
+      </strong>
     </div>
   );
 }

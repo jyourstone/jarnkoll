@@ -11,8 +11,10 @@ export function roundMetric(value: number) {
 export function calculateDraftStats(sets: DraftSetInput[]) {
   return sets.reduce(
     (summary, current) => {
-      const weight = Number(current.weight || 0);
-      const reps = Number(current.reps || 0);
+      const parsedWeight = Number(current.weight || 0);
+      const parsedReps = Number(current.reps || 0);
+      const weight = Number.isFinite(parsedWeight) ? parsedWeight : 0;
+      const reps = Number.isFinite(parsedReps) ? parsedReps : 0;
       const estimatedOneRepMax = weight > 0 && reps > 0 ? weight * (1 + reps / 30) : 0;
 
       summary.maxWeight = Math.max(summary.maxWeight, weight);

@@ -27,10 +27,33 @@ export default function ExerciseDetailPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
+    const id = Number(exerciseId);
+    if (!Number.isInteger(id) || id <= 0) {
+      setData(null);
+      setError('Ogiltigt övnings-id.');
+      return;
+    }
+
+    let cancelled = false;
+    setData(null);
+    setError('');
+
     api
-      .getExerciseProgress(Number(exerciseId))
-      .then(setData)
-      .catch((reason: Error) => setError(reason.message));
+      .getExerciseProgress(id)
+      .then((result) => {
+        if (!cancelled) {
+          setData(result);
+        }
+      })
+      .catch((reason: Error) => {
+        if (!cancelled) {
+          setError(reason.message);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [exerciseId]);
 
   const bestValue = useMemo(() => {

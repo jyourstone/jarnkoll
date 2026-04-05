@@ -233,11 +233,18 @@ export default function LogWorkoutPage() {
     try {
       const exercises = exerciseDrafts.map((exercise) => {
         const sets = exercise.sets
-          .map((setItem, index) => ({
-            setNumber: index + 1,
-            weight: Number(setItem.weight || 0),
-            reps: Number(setItem.reps || 0),
-          }))
+          .map((setItem, index) => {
+            const parsedWeight = Number(setItem.weight || 0);
+            const parsedReps = Number(setItem.reps || 0);
+            const weight = Number.isFinite(parsedWeight) ? parsedWeight : 0;
+            const reps = Number.isFinite(parsedReps) ? parsedReps : 0;
+
+            return {
+              setNumber: index + 1,
+              weight,
+              reps,
+            };
+          })
           .filter((setItem) => setItem.weight > 0 || setItem.reps > 0);
 
         if (!sets.length) {
