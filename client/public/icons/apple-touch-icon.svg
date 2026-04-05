@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Jarnkoll">
+  <defs>
+    <linearGradient id="bg" x1="15%" x2="85%" y1="10%" y2="90%">
+      <stop offset="0%" stop-color="#19273a" />
+      <stop offset="100%" stop-color="#0b1119" />
+    </linearGradient>
+    <linearGradient id="bar" x1="0%" x2="100%" y1="0%" y2="0%">
+      <stop offset="0%" stop-color="#fb923c" />
+      <stop offset="100%" stop-color="#e11d48" />
+    </linearGradient>
+  </defs>
+  <rect width="180" height="180" rx="40" fill="url(#bg)" />
+  <rect x="33" y="81" width="114" height="18" rx="9" fill="url(#bar)" />
+  <rect x="18" y="63" width="15" height="54" rx="7.5" fill="#f8fafc" />
+  <rect x="147" y="63" width="15" height="54" rx="7.5" fill="#f8fafc" />
+  <rect x="49" y="52" width="12" height="76" rx="6" fill="#cbd5e1" />
+  <rect x="119" y="52" width="12" height="76" rx="6" fill="#cbd5e1" />
+  <path d="M84 45h14v60c0 17-12 30-29 30H61v-15h8c9 0 15-6 15-15V45z" fill="#f8fafc" />
+</svg>
