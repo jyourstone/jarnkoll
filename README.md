@@ -17,7 +17,7 @@ Järnkoll is a mobile-first PWA for logging strength workouts in Swedish. It is 
 - React + TypeScript + Vite
 - Express.js API
 - SQLite via `better-sqlite3`
-- `vite-plugin-pwa` for installability and service worker support
+- Static web app manifest for installability
 
 ## Local Development
 
@@ -79,6 +79,5 @@ The app includes:
 - a web app manifest
 - standalone display mode
 - home screen install metadata
-- a service worker for static asset caching
 
 For iPhone users not running in standalone mode, the UI shows a lightweight "Add to Home Screen" hint.
