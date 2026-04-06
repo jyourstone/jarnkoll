@@ -6,7 +6,7 @@ import type { Exercise, TemplateExercise } from '../lib/types';
 interface DraftExercise {
   exerciseId: number;
   exerciseName: string;
-  defaultSets: number;
+  defaultSets: string;
   notes: string;
 }
 
@@ -14,9 +14,18 @@ function mapTemplateExercises(exercises: TemplateExercise[]): DraftExercise[] {
   return exercises.map((exercise) => ({
     exerciseId: exercise.exerciseId,
     exerciseName: exercise.exerciseName,
-    defaultSets: exercise.defaultSets,
+    defaultSets: String(exercise.defaultSets),
     notes: exercise.notes,
   }));
+}
+
+function normalizeDefaultSets(value: string) {
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed)) {
+    return 1;
+  }
+
+  return Math.min(Math.max(parsed, 1), 12);
 }
 
 export default function SessionEditorPage() {
@@ -62,7 +71,7 @@ export default function SessionEditorPage() {
       {
         exerciseId: exercise.id,
         exerciseName: exercise.name,
-        defaultSets: 3,
+        defaultSets: '3',
         notes: '',
       },
     ]);
@@ -84,7 +93,7 @@ export default function SessionEditorPage() {
         {
           exerciseId: exercise.id,
           exerciseName: exercise.name,
-          defaultSets: 3,
+          defaultSets: '3',
           notes: '',
         },
       ]);
@@ -93,6 +102,15 @@ export default function SessionEditorPage() {
     } catch (reason) {
       setError((reason as Error).message);
     }
+  }
+
+  async function handleAddExercise() {
+    if (newExerciseName.trim()) {
+      await createAndAddExercise();
+      return;
+    }
+
+    addExistingExercise();
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -106,7 +124,7 @@ export default function SessionEditorPage() {
         notes,
         exercises: draftExercises.map((exercise) => ({
           exerciseId: exercise.exerciseId,
-          defaultSets: exercise.defaultSets,
+          defaultSets: normalizeDefaultSets(exercise.defaultSets),
           notes: exercise.notes,
         })),
       };
@@ -147,6 +165,20 @@ export default function SessionEditorPage() {
     setDraftExercises((current) => current.filter((_, currentIndex) => currentIndex !== index));
   }
 
+  function handleExistingExerciseChange(value: string) {
+    setSelectedExerciseId(value);
+    if (value) {
+      setNewExerciseName('');
+    }
+  }
+
+  function handleNewExerciseNameChange(value: string) {
+    setNewExerciseName(value);
+    if (value.trim()) {
+      setSelectedExerciseId('');
+    }
+  }
+
   return (
     <section className="page-stack">
       <div className="section-heading">
@@ -185,29 +217,45 @@ export default function SessionEditorPage() {
             </div>
           </div>
 
-          <div className="inline-form">
-            <select value={selectedExerciseId} onChange={(event) => setSelectedExerciseId(event.target.value)}>
-              <option value="">Välj befintlig övning</option>
-              {library.map((exercise) => (
-                <option key={exercise.id} value={exercise.id}>
-                  {exercise.name}
-                </option>
-              ))}
-            </select>
-            <button className="secondary-button" type="button" onClick={addExistingExercise}>
-              Lägg till
-            </button>
-          </div>
+          <div className="stacked-form-group">
+            <div className="form-group-heading">
+              <strong>Lägg till övning</strong>
+              <p className="muted">Välj en befintlig övning eller skriv in en ny som ska skapas direkt.</p>
+            </div>
 
-          <div className="inline-form">
-            <input
-              value={newExerciseName}
-              onChange={(event) => setNewExerciseName(event.target.value)}
-              placeholder="Skapa ny övning"
-            />
-            <button className="ghost-button" type="button" onClick={createAndAddExercise}>
-              Skapa och lägg till
-            </button>
+            <div className="inline-form add-exercise-flow">
+              <select value={selectedExerciseId} onChange={(event) => handleExistingExerciseChange(event.target.value)}>
+                <option value="">Välj befintlig övning</option>
+                {library.map((exercise) => (
+                  <option key={exercise.id} value={exercise.id}>
+                    {exercise.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <p className="form-divider" aria-hidden="true">
+              eller
+            </p>
+
+            <div className="inline-form add-exercise-flow">
+              <input
+                value={newExerciseName}
+                onChange={(event) => handleNewExerciseNameChange(event.target.value)}
+                placeholder="Ange en ny övning här"
+              />
+            </div>
+
+            <div>
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={handleAddExercise}
+                disabled={!selectedExerciseId && !newExerciseName.trim()}
+              >
+                Lägg till vald övning
+              </button>
+            </div>
           </div>
 
           <div className="card-list">
@@ -235,8 +283,10 @@ export default function SessionEditorPage() {
                       type="number"
                       min={1}
                       max={12}
+                      inputMode="numeric"
                       value={exercise.defaultSets}
-                      onChange={(event) => updateDraftExercise(index, { defaultSets: Number(event.target.value) || 1 })}
+                      onChange={(event) => updateDraftExercise(index, { defaultSets: event.target.value })}
+                      onBlur={(event) => updateDraftExercise(index, { defaultSets: String(normalizeDefaultSets(event.target.value)) })}
                     />
                   </label>
 

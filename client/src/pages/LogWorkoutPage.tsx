@@ -333,12 +333,12 @@ export default function LogWorkoutPage() {
 
       <form className="page-stack" onSubmit={handleSave}>
         <section className="card form-card">
-          <div className="two-column-grid">
+          <div className="two-column-grid two-column-grid-log">
             <label className="field">
               <span>Passnamn</span>
               <input value={title} onChange={(event) => setTitle(event.target.value)} required />
             </label>
-            <label className="field">
+            <label className="field field-compact">
               <span>Datum</span>
               <input type="date" value={performedOn} onChange={(event) => setPerformedOn(event.target.value)} />
             </label>
